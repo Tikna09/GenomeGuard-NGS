@@ -30,8 +30,13 @@ def _message_bytes(
     if not isinstance(payload, bytes):
         raise TypeError("payload must be bytes")
 
-    stream_bytes = stream_id.encode("utf-8")
-    message_id_bytes = message_id.encode("utf-8")
+    try:
+        stream_bytes = stream_id.encode("utf-8")
+        message_id_bytes = message_id.encode("utf-8")
+    except UnicodeEncodeError as exc:
+        raise ValueError(
+            "stream_id and message_id must contain valid UTF-8 text"
+        ) from exc
 
     return (
         struct.pack(">I", len(stream_bytes))
@@ -81,5 +86,4 @@ def verify_message_tag(
         )
     except (ValueError, TypeError, struct.error, UnicodeError):
         return False
-
     return hmac.compare_digest(expected, tag.lower())
