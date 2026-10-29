@@ -38,3 +38,51 @@ Expected: tests pass and the demo reports that the original synthetic payload ve
 
 ## Next
 Day 2 adds HMAC authentication. Day 3 adds controlled message-tampering and replay scenarios. The current Day 1 code is not a production security system.
+
+## Security Evaluation
+
+GenomeGuard NGS is a local defensive research prototype for
+evaluating integrity, authentication, and basic replay detection
+in a simulated NGS-like data pipeline.
+
+### Implemented Features
+
+- SHA-256 integrity verification
+- HMAC-SHA-256 message authentication
+- In-memory replay detection
+- Integrated verification pipeline
+- JSONL audit logging
+- Performance benchmark and CSV experiment runner
+
+### Preliminary Experimental Results
+
+In one local run, 100 trials were performed for each scenario:
+
+| Scenario | Result |
+|---|---|
+| Valid messages | 100 accepted |
+| Modified payloads | 100 rejected |
+| Invalid authentication tags | 100 rejected |
+| Replayed message IDs | 100 rejected |
+
+The automated test suite reported 22 passing tests.
+
+These are preliminary results from controlled synthetic tests.
+They do not demonstrate 100% detection against real-world
+man-in-the-middle attacks.
+
+### Limitations
+
+- Replay state is held in memory and lost on restart.
+- HMAC authenticates the payload, not the message ID or freshness metadata.
+- Audit logs are not tamper-proof.
+- Performance results require repeated trials for reliable comparison.
+- No real sequencing equipment, patient data, or external network interception is used.
+
+### Future Work
+
+- Authenticate payloads together with message IDs and freshness metadata.
+- Evaluate replay persistence and concurrent message handling.
+- Repeat experiments with different payload sizes.
+- Compare baseline integrity, HMAC, and freshness-aware approaches.
+- Review related research and assess the novelty of the approach.
