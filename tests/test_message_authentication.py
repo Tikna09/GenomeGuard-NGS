@@ -93,3 +93,21 @@ def test_non_bytes_payload_is_rejected_when_creating_tag():
         create_message_tag(
             KEY, STREAM_ID, MESSAGE_ID, SEQUENCE, "ACGT"
         )
+
+
+def test_stream_id_with_invalid_unicode_is_rejected():
+    import pytest
+
+    with pytest.raises(UnicodeEncodeError):
+        create_message_tag(
+            KEY, "\ud800", MESSAGE_ID, SEQUENCE, PAYLOAD
+        )
+
+
+def test_message_id_with_invalid_unicode_is_rejected():
+    import pytest
+
+    with pytest.raises(UnicodeEncodeError):
+        create_message_tag(
+            KEY, STREAM_ID, "\ud800", SEQUENCE, PAYLOAD
+        )
