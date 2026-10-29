@@ -61,3 +61,35 @@ def test_modified_stream_id_fails():
     assert verify_message_tag(
         KEY, "ngs-stream-002", MESSAGE_ID, SEQUENCE, PAYLOAD, tag
     ) is False
+
+def test_malformed_tag_is_rejected():
+    assert verify_message_tag(
+        KEY, STREAM_ID, MESSAGE_ID, SEQUENCE, PAYLOAD, "not-a-valid-tag"
+    ) is False
+
+
+def test_empty_stream_id_is_rejected_when_creating_tag():
+    import pytest
+
+    with pytest.raises(ValueError):
+        create_message_tag(
+            KEY, "", MESSAGE_ID, SEQUENCE, PAYLOAD
+        )
+
+
+def test_negative_sequence_is_rejected_when_creating_tag():
+    import pytest
+
+    with pytest.raises(ValueError):
+        create_message_tag(
+            KEY, STREAM_ID, MESSAGE_ID, -1, PAYLOAD
+        )
+
+
+def test_non_bytes_payload_is_rejected_when_creating_tag():
+    import pytest
+
+    with pytest.raises(TypeError):
+        create_message_tag(
+            KEY, STREAM_ID, MESSAGE_ID, SEQUENCE, "ACGT"
+        )
