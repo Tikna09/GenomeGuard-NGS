@@ -1,8 +1,5 @@
 
-from src.message_authentication import (
-    create_message_tag,
-    verify_message_tag,
-)
+from src.message_authentication import verify_message_tag
 from src.sequence_guard import SequenceGuard
 
 
@@ -21,19 +18,20 @@ class FreshnessPipeline:
         payload: bytes,
         tag: str,
     ) -> dict:
-        # Authenticate all message fields before changing state.
         if not verify_message_tag(
-            key, message_id, sequence_number, payload, tag
+            key,
+            stream_id,
+            message_id,
+            sequence_number,
+            payload,
+            tag,
         ):
             return {
                 "status": "AUTHENTICATION_FAILED",
                 "accepted": False,
             }
 
-        # Only authenticated messages may advance sequence state.
-        if not self.sequence_guard.accept(
-            stream_id, sequence_number
-        ):
+        if not self.sequence_guard.accept(stream_id, sequence_number):
             return {
                 "status": "STALE_OR_REPLAYED",
                 "accepted": False,

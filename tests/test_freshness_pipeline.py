@@ -1,23 +1,25 @@
 
-from src.freshness_pipeline import FreshnessPipeline
 from src.message_authentication import create_message_tag
+from src.freshness_pipeline import FreshnessPipeline
 
 
 KEY = b"local-test-key-only"
-STREAM = "ngs-stream-1"
+STREAM_ID = "stream-1"
 PAYLOAD = b"ACGTACGT"
 
 
 def make_tag(message_id, sequence, payload=PAYLOAD):
-    return create_message_tag(KEY, message_id, sequence, payload)
+    return create_message_tag(
+        KEY, STREAM_ID, message_id, sequence, payload
+    )
 
 
 def test_valid_message_is_accepted():
     pipeline = FreshnessPipeline()
-    tag = make_tag("msg-1", 1)
+    tag = make_tag("message-1", 1)
 
     result = pipeline.process(
-        KEY, STREAM, "msg-1", 1, PAYLOAD, tag
+        KEY, STREAM_ID, "message-1", 1, PAYLOAD, tag
     )
 
     assert result["status"] == "ACCEPTED"
@@ -25,52 +27,66 @@ def test_valid_message_is_accepted():
 
 def test_tampered_payload_is_rejected():
     pipeline = FreshnessPipeline()
-    tag = make_tag("msg-1", 1)
+    tag = make_tag("message-1", 1)
 
     result = pipeline.process(
-        KEY, STREAM, "msg-1", 1, b"TCGTACGT", tag
+        KEY, STREAM_ID, "message-1", 1, b"TCGTACGT", tag
+    )
+
+    assert result["status"] == "AUTHENTICATION_FAILED"
+    assert result["accepted"] is False
+
+
+def test_duplicate_sequence_is_rejected():
+    pipeline = FreshnessPipeline()
+    tag = make_tag("message-1", 1)
+
+    first = pipeline.process(
+        KEY, STREAM_ID, "message-1", 1, PAYLOAD, tag
+    )
+    second = pipeline.process(
+        KEY, STREAM_ID, "message-1", 1, PAYLOAD, tag
+    )
+
+    assert first["accepted"] is True
+    assert second["status"] == "STALE_OR_REPLAYED"
+
+
+def test_invalid_authentication_is_rejected():
+    pipeline = FreshnessPipeline()
+    tag = make_tag("message-1", 1)
+
+    result = pipeline.process(
+        KEY, STREAM_ID, "message-1", 1, b"MODIFIED", tag
     )
 
     assert result["status"] == "AUTHENTICATION_FAILED"
 
 
-def test_duplicate_sequence_is_rejected():
+def test_message_cannot_be_moved_to_another_stream():
     pipeline = FreshnessPipeline()
-    tag1 = make_tag("msg-1", 1)
-    tag2 = make_tag("msg-2", 1)
+    tag = make_tag("message-1", 1)
 
-    pipeline.process(KEY, STREAM, "msg-1", 1, PAYLOAD, tag1)
     result = pipeline.process(
-        KEY, STREAM, "msg-2", 1, PAYLOAD, tag2
+        KEY, "different-stream", "message-1", 1, PAYLOAD, tag
     )
 
-    assert result["status"] == "STALE_OR_REPLAYED"
+    assert result["status"] == "AUTHENTICATION_FAILED"
 
 
 def test_older_sequence_is_rejected():
     pipeline = FreshnessPipeline()
-    tag1 = make_tag("msg-1", 3)
-    tag2 = make_tag("msg-2", 2)
 
-    pipeline.process(KEY, STREAM, "msg-1", 3, PAYLOAD, tag1)
+    tag3 = make_tag("message-3", 3)
+    first = pipeline.process(
+        KEY, STREAM_ID, "message-3", 3, PAYLOAD, tag3
+    )
+    assert first["accepted"] is True
+
+    tag2 = make_tag("message-2", 2)
     result = pipeline.process(
-        KEY, STREAM, "msg-2", 2, PAYLOAD, tag2
+        KEY, STREAM_ID, "message-2", 2, PAYLOAD, tag2
     )
 
     assert result["status"] == "STALE_OR_REPLAYED"
-
-
-def test_invalid_message_does_not_advance_sequence():
-    pipeline = FreshnessPipeline()
-
-    invalid = pipeline.process(
-        KEY, STREAM, "msg-1", 10, PAYLOAD, "0" * 64
-    )
-
-    valid_tag = make_tag("msg-2", 1)
-    valid = pipeline.process(
-        KEY, STREAM, "msg-2", 1, PAYLOAD, valid_tag
-    )
-
-    assert invalid["status"] == "AUTHENTICATION_FAILED"
-    assert valid["status"] == "ACCEPTED"
+    assert result["accepted"] is False

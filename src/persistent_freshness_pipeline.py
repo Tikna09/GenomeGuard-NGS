@@ -4,7 +4,7 @@ from src.persistent_sequence_guard import PersistentSequenceGuard
 
 
 class PersistentFreshnessPipeline:
-    """Authenticate each message before updating persistent sequence state."""
+    """Authenticate message fields before updating persistent sequence state."""
 
     def __init__(self, database_path: str):
         self.sequence_guard = PersistentSequenceGuard(database_path)
@@ -18,9 +18,14 @@ class PersistentFreshnessPipeline:
         payload: bytes,
         tag: str,
     ) -> dict:
-        # Never update sequence state for an unauthenticated message.
+        # Authenticate the stream ID and all other message fields.
         if not verify_message_tag(
-            key, message_id, sequence_number, payload, tag
+            key,
+            stream_id,
+            message_id,
+            sequence_number,
+            payload,
+            tag,
         ):
             return {
                 "status": "AUTHENTICATION_FAILED",
