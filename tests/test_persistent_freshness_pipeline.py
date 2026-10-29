@@ -94,3 +94,28 @@ def test_message_cannot_be_moved_to_another_stream(tmp_path):
 
     assert result["status"] == "AUTHENTICATION_FAILED"
     assert result["accepted"] is False
+
+def test_wrong_key_does_not_consume_sequence(tmp_path):
+    pipeline = PersistentFreshnessPipeline(
+        str(tmp_path / "wrong-key.db")
+    )
+
+    wrong_key = b"another-test-key"
+    invalid_tag = create_message_tag(
+        wrong_key, STREAM_ID, "msg-1", 5, PAYLOAD
+    )
+
+    rejected = pipeline.process(
+        KEY, STREAM_ID, "msg-1", 5, PAYLOAD, invalid_tag
+    )
+
+    assert rejected["status"] == "AUTHENTICATION_FAILED"
+    assert rejected["accepted"] is False
+
+    valid_tag = make_tag("msg-2", 1)
+    accepted = pipeline.process(
+        KEY, STREAM_ID, "msg-2", 1, PAYLOAD, valid_tag
+    )
+
+    assert accepted["status"] == "ACCEPTED"
+    assert accepted["accepted"] is True
