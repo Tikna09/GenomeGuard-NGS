@@ -627,7 +627,5 @@ Cybersecurity | Artificial Intelligence & Data Science
 
 **Project:** GenomeGuard-NGS
 
-Add your actual GitHub profile, repository URL, and LinkedIn profile URL before publishing this README.
-
 ---
 *Disclaimer: This repository is intended for educational and defensive cybersecurity research using synthetic data in a local simulation. It is not a validated NGS security product and should not be used as the sole security control for real systems.*
