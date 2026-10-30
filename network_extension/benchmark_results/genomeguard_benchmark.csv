@@ -1,0 +1,4 @@
+configuration,file,size_mb,latency_seconds,throughput_mbps
+GenomeGuard,synthetic_1MB.fastq,1.0,0.05172488900007011,19.33305260449461
+GenomeGuard,synthetic_10MB.fastq,10.0,0.2199269530001402,45.46964282269497
+GenomeGuard,synthetic_50MB.fastq,50.0,0.9558939449998434,52.30705797598518

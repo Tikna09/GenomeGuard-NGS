@@ -1,0 +1,4 @@
+configuration,file,size_mb,latency_seconds,throughput_mbps
+TLS-only,synthetic_1MB.fastq,1.0,0.1668774879999546,5.9924200201304085
+TLS-only,synthetic_10MB.fastq,10.0,0.28860303399960685,34.64967038431627
+TLS-only,synthetic_50MB.fastq,50.0,1.1304833739995956,44.2288680665001

@@ -619,6 +619,30 @@ The findings provide preliminary evidence that persistent sequence tracking can 
 
 ---
 
+## Network Security Extension
+
+GenomeGuard-NGS also includes a network-based experimental extension for securing simulated NGS data transfers between Kali Linux and Ubuntu Server.
+
+### Implemented Security Controls
+
+- TLS 1.3 encrypted communication with server certificate verification.
+- HMAC-SHA256 authentication of transfer metadata.
+- SHA-256 payload integrity verification.
+- Persistent replay protection using SQLite sequence tracking.
+- Metadata validation and automated security testing.
+
+### Experimental Validation
+
+The network extension includes automated tests for valid transfers, invalid authentication, payload tampering, invalid metadata, and duplicate-sequence replay attempts.
+
+It also includes a TLS-only baseline comparison, repeated benchmark measurements, CSV results, and performance graphs.
+
+See [`network_extension/README.md`](network_extension/README.md) for implementation details and experimental results.
+
+**Scope:** This is a controlled virtual-network prototype using synthetic FASTQ-like payloads. It is not a clinical deployment or a validated biological sequencing pipeline.
+
+---
+
 ## 21. Author
 
 **Ankit Kirtane**

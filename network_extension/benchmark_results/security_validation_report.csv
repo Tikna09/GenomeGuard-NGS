@@ -1,0 +1,7 @@
+Security Test,Expected HTTP Status,Expected Server Response,Result
+Valid transfer,200,accepted,PASS
+Invalid HMAC,401,authentication_failed,PASS
+Payload tampering,400,integrity_failed,PASS
+Invalid metadata,400,invalid_metadata_fields,PASS
+First replay transfer,200,accepted,PASS
+Duplicate sequence replay,409,replay_or_duplicate,PASS

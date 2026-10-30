@@ -1,0 +1,6 @@
+configuration,trial,file,size_mib,latency_seconds,throughput_mib_s,http_status,result
+TLS-only,1,synthetic_50MB.fastq,50.0,0.5306041690000711,94.23220344126867,200,accepted
+TLS-only,2,synthetic_50MB.fastq,50.0,0.5130484579985932,97.45668117793485,200,accepted
+TLS-only,3,synthetic_50MB.fastq,50.0,0.5740870669997094,87.09480299096394,200,accepted
+TLS-only,4,synthetic_50MB.fastq,50.0,0.43328119600118953,115.39849977671943,200,accepted
+TLS-only,5,synthetic_50MB.fastq,50.0,0.45019102999867755,111.06396322500446,200,accepted

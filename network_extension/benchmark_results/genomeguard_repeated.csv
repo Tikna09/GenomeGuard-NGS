@@ -1,0 +1,16 @@
+configuration,trial,file,size_mib,latency_seconds,throughput_mib_s,http_status,result
+GenomeGuard,1,synthetic_1MB.fastq,1.0,0.12082336499952362,8.27654485540891,200,accepted
+GenomeGuard,1,synthetic_10MB.fastq,10.0,0.2231504669998685,44.81281233440525,200,accepted
+GenomeGuard,1,synthetic_50MB.fastq,50.0,0.867948664999858,57.60709361769475,200,accepted
+GenomeGuard,2,synthetic_1MB.fastq,1.0,0.03533012399930158,28.304457692244966,200,accepted
+GenomeGuard,2,synthetic_10MB.fastq,10.0,0.18669041599969205,53.564613622246654,200,accepted
+GenomeGuard,2,synthetic_50MB.fastq,50.0,1.045436916001563,47.826893459275205,200,accepted
+GenomeGuard,3,synthetic_1MB.fastq,1.0,0.08009978599875467,12.484427861212353,200,accepted
+GenomeGuard,3,synthetic_10MB.fastq,10.0,0.45917995600029826,21.777954088208293,200,accepted
+GenomeGuard,3,synthetic_50MB.fastq,50.0,1.4753499589987769,33.89026426918513,200,accepted
+GenomeGuard,4,synthetic_1MB.fastq,1.0,0.04585844699977315,21.806233429687374,200,accepted
+GenomeGuard,4,synthetic_10MB.fastq,10.0,0.2994009990015911,33.400022155393195,200,accepted
+GenomeGuard,4,synthetic_50MB.fastq,50.0,0.8263198940003349,60.50925357483858,200,accepted
+GenomeGuard,5,synthetic_1MB.fastq,1.0,0.04064429800018843,24.6036971777779,200,accepted
+GenomeGuard,5,synthetic_10MB.fastq,10.0,0.1830167120006081,54.639818903351156,200,accepted
+GenomeGuard,5,synthetic_50MB.fastq,50.0,0.8683768380014953,57.57868912656777,200,accepted
